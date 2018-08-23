@@ -16,7 +16,7 @@
  * Within the module itself, all functions must be prefixed with the module
  * filename, followed by an underscore, and then the function name. For this
  * example file, the filename is "provisioningmodule" and therefore all
- * functions begin "provisioningmodule_".
+ * functions begin "swarm_".
  *
  * If your module or third party API does not support a given function, you
  * should not define that function within your module. Only the _ConfigOptions
@@ -49,16 +49,16 @@ if (!defined("WHMCS")) {
  *
  * @return array
  */
-function provisioningmodule_MetaData()
+function swarm_MetaData()
 {
     return array(
-        'DisplayName' => 'Demo Provisioning Module',
+        'DisplayName' => 'Docker Swarm Provisioning Module',
         'APIVersion' => '1.1', // Use API Version 1.1
-        'RequiresServer' => true, // Set true if module requires a server to work
-        'DefaultNonSSLPort' => '1111', // Default Non-SSL Connection Port
-        'DefaultSSLPort' => '1112', // Default SSL Connection Port
-        'ServiceSingleSignOnLabel' => 'Login to Panel as User',
-        'AdminSingleSignOnLabel' => 'Login to Panel as Admin',
+        'RequiresServer' => false, // Set true if module requires a server to work
+        //'DefaultNonSSLPort' => '1111', // Default Non-SSL Connection Port
+        //'DefaultSSLPort' => '1112', // Default SSL Connection Port
+        //'ServiceSingleSignOnLabel' => 'Login to Panel as User',
+        //'AdminSingleSignOnLabel' => 'Login to Panel as Admin',
     );
 }
 
@@ -85,11 +85,11 @@ function provisioningmodule_MetaData()
  *
  * @return array
  */
-function provisioningmodule_ConfigOptions()
+function swarm_ConfigOptions()
 {
     return array(
         // a text field type allows for single line text input
-        'Text Field' => array(
+        /*'Text Field' => array(
             'Type' => 'text',
             'Size' => '25',
             'Default' => '1024',
@@ -122,13 +122,14 @@ function provisioningmodule_ConfigOptions()
             'Type' => 'radio',
             'Options' => 'First Option,Second Option,Third Option',
             'Description' => 'Choose your option!',
-        ),
+        ),*/
         // the textarea field type allows for multi-line text input
-        'Textarea Field' => array(
+        'Stake Addresses' => array(
             'Type' => 'textarea',
-            'Rows' => '3',
-            'Cols' => '60',
-            'Description' => 'Freeform multi-line text input field',
+            'Rows' => '10',
+            'Cols' => '36',
+            'Description' => 'Stake addresses for Horizen Nodes',
+            'SimpleMode' => true,
         ),
     );
 }
@@ -149,7 +150,7 @@ function provisioningmodule_ConfigOptions()
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_CreateAccount(array $params)
+function swarm_CreateAccount(array $params)
 {
     try {
         // Call the service's provisioning function, using the values provided
@@ -168,6 +169,9 @@ function provisioningmodule_CreateAccount(array $params)
         //     ...
         // )
         // ```
+
+        // TODO: Create nodes using 'Stake Addresses' and order quantity
+
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -197,11 +201,13 @@ function provisioningmodule_CreateAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_SuspendAccount(array $params)
+function swarm_SuspendAccount(array $params)
 {
     try {
         // Call the service's suspend function, using the values provided by
         // WHMCS in `$params`.
+
+        // TODO: drop service node count to 0
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -231,11 +237,13 @@ function provisioningmodule_SuspendAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_UnsuspendAccount(array $params)
+function swarm_UnsuspendAccount(array $params)
 {
     try {
         // Call the service's unsuspend function, using the values provided by
         // WHMCS in `$params`.
+
+        // TODO: restore node count to 1
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -264,11 +272,14 @@ function provisioningmodule_UnsuspendAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_TerminateAccount(array $params)
+function swarm_TerminateAccount(array $params)
 {
     try {
         // Call the service's terminate function, using the values provided by
         // WHMCS in `$params`.
+
+        // TODO: Recover challenge ZEN
+        // TODO: Destroy node service
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
@@ -301,7 +312,7 @@ function provisioningmodule_TerminateAccount(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_ChangePassword(array $params)
+function swarm_ChangePassword(array $params)
 {
     try {
         // Call the service's change password function, using the values
@@ -347,7 +358,7 @@ function provisioningmodule_ChangePassword(array $params)
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_ChangePackage(array $params)
+function swarm_ChangePackage(array $params)
 {
     try {
         // Call the service's change password function, using the values
@@ -395,11 +406,12 @@ function provisioningmodule_ChangePackage(array $params)
  *
  * @return array
  */
-function provisioningmodule_TestConnection(array $params)
+function swarm_TestConnection(array $params)
 {
     try {
         // Call the service's connection test function.
 
+        // TODO: test docker connection
         $success = true;
         $errorMsg = '';
     } catch (Exception $e) {
@@ -428,11 +440,11 @@ function provisioningmodule_TestConnection(array $params)
  * Define additional actions that an admin user can perform for an
  * instance of a product/service.
  *
- * @see provisioningmodule_buttonOneFunction()
+ * @see swarm_buttonOneFunction()
  *
  * @return array
  */
-function provisioningmodule_AdminCustomButtonArray()
+function swarm_AdminCustomButtonArray()
 {
     return array(
         "Button 1 Display Value" => "buttonOneFunction",
@@ -451,7 +463,7 @@ function provisioningmodule_AdminCustomButtonArray()
  *
  * @return array
  */
-function provisioningmodule_ClientAreaCustomButtonArray()
+function swarm_ClientAreaCustomButtonArray()
 {
     return array(
         "Action 1 Display Value" => "actionOneFunction",
@@ -470,11 +482,11 @@ function provisioningmodule_ClientAreaCustomButtonArray()
  * @param array $params common module parameters
  *
  * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
- * @see provisioningmodule_AdminCustomButtonArray()
+ * @see swarm_AdminCustomButtonArray()
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_buttonOneFunction(array $params)
+function swarm_buttonOneFunction(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -506,11 +518,11 @@ function provisioningmodule_buttonOneFunction(array $params)
  * @param array $params common module parameters
  *
  * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
- * @see provisioningmodule_ClientAreaCustomButtonArray()
+ * @see swarm_ClientAreaCustomButtonArray()
  *
  * @return string "success" or an error message
  */
-function provisioningmodule_actionOneFunction(array $params)
+function swarm_actionOneFunction(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -543,11 +555,11 @@ function provisioningmodule_actionOneFunction(array $params)
  * @param array $params common module parameters
  *
  * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
- * @see provisioningmodule_AdminServicesTabFieldsSave()
+ * @see swarm_AdminServicesTabFieldsSave()
  *
  * @return array
  */
-function provisioningmodule_AdminServicesTabFields(array $params)
+function swarm_AdminServicesTabFields(array $params)
 {
     try {
         // Call the service's function, using the values provided by WHMCS in
@@ -559,9 +571,9 @@ function provisioningmodule_AdminServicesTabFields(array $params)
             'Number of Apples' => (int) $response['numApples'],
             'Number of Oranges' => (int) $response['numOranges'],
             'Last Access Date' => date("Y-m-d H:i:s", $response['lastLoginTimestamp']),
-            'Something Editable' => '<input type="hidden" name="provisioningmodule_original_uniquefieldname" '
+            'Something Editable' => '<input type="hidden" name="swarm_original_uniquefieldname" '
                 . 'value="' . htmlspecialchars($response['textvalue']) . '" />'
-                . '<input type="text" name="provisioningmodule_uniquefieldname"'
+                . '<input type="text" name="swarm_uniquefieldname"'
                 . 'value="' . htmlspecialchars($response['textvalue']) . '" />',
         );
     } catch (Exception $e) {
@@ -592,17 +604,17 @@ function provisioningmodule_AdminServicesTabFields(array $params)
  * @param array $params common module parameters
  *
  * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
- * @see provisioningmodule_AdminServicesTabFields()
+ * @see swarm_AdminServicesTabFields()
  */
-function provisioningmodule_AdminServicesTabFieldsSave(array $params)
+function swarm_AdminServicesTabFieldsSave(array $params)
 {
     // Fetch form submission variables.
-    $originalFieldValue = isset($_REQUEST['provisioningmodule_original_uniquefieldname'])
-        ? $_REQUEST['provisioningmodule_original_uniquefieldname']
+    $originalFieldValue = isset($_REQUEST['swarm_original_uniquefieldname'])
+        ? $_REQUEST['swarm_original_uniquefieldname']
         : '';
 
-    $newFieldValue = isset($_REQUEST['provisioningmodule_uniquefieldname'])
-        ? $_REQUEST['provisioningmodule_uniquefieldname']
+    $newFieldValue = isset($_REQUEST['swarm_uniquefieldname'])
+        ? $_REQUEST['swarm_uniquefieldname']
         : '';
 
     // Look for a change in value to avoid making unnecessary service calls.
@@ -638,7 +650,7 @@ function provisioningmodule_AdminServicesTabFieldsSave(array $params)
  *
  * @return array
  */
-function provisioningmodule_ServiceSingleSignOn(array $params)
+function swarm_ServiceSingleSignOn(array $params)
 {
     try {
         // Call the service's single sign-on token retrieval function, using the
@@ -683,7 +695,7 @@ function provisioningmodule_ServiceSingleSignOn(array $params)
  *
  * @return array
  */
-function provisioningmodule_AdminSingleSignOn(array $params)
+function swarm_AdminSingleSignOn(array $params)
 {
     try {
         // Call the service's single sign-on admin token retrieval function,
@@ -741,7 +753,7 @@ function provisioningmodule_AdminSingleSignOn(array $params)
  *
  * @return array
  */
-function provisioningmodule_ClientArea(array $params)
+function swarm_ClientArea(array $params)
 {
     // Determine the requested action and set service call parameters based on
     // the action.
