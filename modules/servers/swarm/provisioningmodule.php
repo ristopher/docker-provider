@@ -170,7 +170,7 @@ function swarm_CreateAccount(array $params)
         // )
         // ```
 
-        // TODO: Create nodes using 'Stake Addresses' and order quantity
+        // TODO: Create nodes using $params['customfields']['Stake Addresses'] and order quantity
 
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
@@ -755,10 +755,11 @@ function swarm_AdminSingleSignOn(array $params)
  */
 function swarm_ClientArea(array $params)
 {
+    /*
     // Determine the requested action and set service call parameters based on
     // the action.
     $requestedAction = isset($_REQUEST['customAction']) ? $_REQUEST['customAction'] : '';
-
+    
     if ($requestedAction == 'manage') {
         $serviceAction = 'get_usage';
         $templateFile = 'templates/manage.tpl';
@@ -800,4 +801,5 @@ function swarm_ClientArea(array $params)
             ),
         );
     }
+    */
 }
